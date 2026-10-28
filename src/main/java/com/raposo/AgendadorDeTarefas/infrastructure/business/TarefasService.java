@@ -1,6 +1,6 @@
 package com.raposo.AgendadorDeTarefas.infrastructure.business;
 
-import com.raposo.AgendadorDeTarefas.infrastructure.business.DTO.TarefasDTO;
+import com.raposo.AgendadorDeTarefas.infrastructure.business.DTO.TarefasDTORecord;
 import com.raposo.AgendadorDeTarefas.infrastructure.business.mapper.TarefaUpdateConverter;
 import com.raposo.AgendadorDeTarefas.infrastructure.business.mapper.TarefasConverter;
 import com.raposo.AgendadorDeTarefas.infrastructure.entity.TarefasEntity;
@@ -23,31 +23,28 @@ public class TarefasService {
     private final TarefaUpdateConverter tarefaUpdateConverter;
     private final JwtUtil jwtUtil;
 
-    public TarefasDTO gravarTarefa(String token, TarefasDTO dto) {
+    public TarefasDTORecord gravarTarefa(String token, TarefasDTORecord dto) {
 
         String email = jwtUtil.extractUsername(token.substring(7));
 
-        dto.setDataCriacao(LocalDateTime.now());
-        dto.setStatusNotificacaoEnum(StatusNotificacaoEnum.PENDENTE);
-        dto.setEmailUsuario(email);
+        TarefasDTORecord dtoFinal = new TarefasDTORecord(null, dto.nomeTarefa(), dto.descricao(), LocalDateTime.now(), dto.dataEvento(), email, null, StatusNotificacaoEnum.PENDENTE);
 
-        TarefasEntity entity = tarefaConverter.paraTarefaEntity(dto);
-
+        TarefasEntity entity = tarefaConverter.paraTarefaEntity(dtoFinal);
 
         return tarefaConverter.paraTarefaDTO(tarefasRepository.save(entity));
     }
 
-    public List<TarefasDTO> buscaTarefasAgendadasPorPeriodo(LocalDateTime dataInicial, LocalDateTime dataFinal) {
+    public List<TarefasDTORecord> buscaTarefasAgendadasPorPeriodo(LocalDateTime dataInicial, LocalDateTime dataFinal) {
 
-        return tarefaConverter.ParaListaTarefasDTO(
+        return tarefaConverter.ParaListaTarefasDTORecord(
                 tarefasRepository.findBydataEventoBetweenAndStatusNotificacaoEnum(dataInicial, dataFinal, StatusNotificacaoEnum.PENDENTE)
         );
     }
 
-    public List<TarefasDTO> buscaTarefasAgendadasPorEmail(String token) {
+    public List<TarefasDTORecord> buscaTarefasAgendadasPorEmail(String token) {
         String email = jwtUtil.extractUsername(token.substring(7));
 
-        return tarefaConverter.ParaListaTarefasDTO(
+        return tarefaConverter.ParaListaTarefasDTORecord(
                 tarefasRepository.findByEmailUsuario(email)
         );
     }
@@ -60,7 +57,7 @@ public class TarefasService {
         }
     }
 
-    public TarefasDTO alteraStatus(StatusNotificacaoEnum status, String id) {
+    public TarefasDTORecord alteraStatus(StatusNotificacaoEnum status, String id) {
 
         try {
 
@@ -75,7 +72,7 @@ public class TarefasService {
 
     }
 
-    public TarefasDTO alteraTarefa(String id, TarefasDTO dto) {
+    public TarefasDTORecord alteraTarefa(String id, TarefasDTORecord dto) {
 
         try {
 

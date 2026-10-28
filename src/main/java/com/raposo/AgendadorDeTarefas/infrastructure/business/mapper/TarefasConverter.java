@@ -1,6 +1,6 @@
 package com.raposo.AgendadorDeTarefas.infrastructure.business.mapper;
 
-import com.raposo.AgendadorDeTarefas.infrastructure.business.DTO.TarefasDTO;
+import com.raposo.AgendadorDeTarefas.infrastructure.business.DTO.TarefasDTORecord;
 import com.raposo.AgendadorDeTarefas.infrastructure.entity.TarefasEntity;
 import org.mapstruct.Mapper;
 
@@ -9,11 +9,11 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface TarefasConverter {
 
-    TarefasEntity paraTarefaEntity(TarefasDTO dto);
+    TarefasEntity paraTarefaEntity(TarefasDTORecord dto);
 
-    TarefasDTO paraTarefaDTO(TarefasEntity entity);
+    TarefasDTORecord paraTarefaDTO(TarefasEntity entity);
 
-    List<TarefasEntity> paraListaTarefasEntity(List<TarefasDTO> dto);
+    List<TarefasEntity> paraListaTarefasEntity(List<TarefasDTORecord> dto);
 
-    List<TarefasDTO> ParaListaTarefasDTO(List<TarefasEntity> entity);
+    List<TarefasDTORecord> ParaListaTarefasDTORecord(List<TarefasEntity> entity);
 }
